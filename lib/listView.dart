@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_const
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'dart:core';
 
 void main() => runApp(const MyApp());
 
@@ -58,11 +59,30 @@ class BelajarListView extends State<MyHomePage> {
     "2029",
     "2030"
   ];
+  static const platform = MethodChannel('com.example.belajar_flutter/battery');
+
+  // Get battery level.
+  String _batteryLevel = 'Unknown battery level.';
+
+  Future<void> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final int result = await platform.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
+    }
+
+    setState(() {
+      _batteryLevel = batteryLevel;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(_batteryLevel),
       ),
       body: ListView.separated(
         itemBuilder: (context, index) {
@@ -70,13 +90,13 @@ class BelajarListView extends State<MyHomePage> {
             child: ListTile(
               title: Text(
                 bulan[index],
-                style:const TextStyle(fontSize: 30),
+                style: const TextStyle(fontSize: 30),
               ),
               subtitle: Text(tahun[index]),
               leading: CircleAvatar(
                   child: Text(
                 bulan[index][0],
-                style:const TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               )),
             ),
           );
@@ -86,9 +106,9 @@ class BelajarListView extends State<MyHomePage> {
             return Container(
               height: 60,
               color: Colors.greenAccent,
-              child:const Center(
-                  child:const Text('Space Iklan-iklanan',
-                      style:const TextStyle(fontSize: 20))),
+              child: const Center(
+                  child: const Text('Space Iklan-iklanan',
+                      style: const TextStyle(fontSize: 20))),
             );
           } else {
             return const Divider();
@@ -96,8 +116,14 @@ class BelajarListView extends State<MyHomePage> {
         },
         itemCount: bulan.length,
       ),
-
-      // This trailing comma makes auto-formatting nicer for build methods.
+    
+      floatingActionButton: FloatingActionButton(
+        onPressed: _getBatteryLevel,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+        
+      ),
+    
     );
   }
 }

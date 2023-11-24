@@ -11,6 +11,7 @@ void main() {
 class BelajarForm extends StatefulWidget {
   @override
   _BelajarFormState createState() => _BelajarFormState();
+
 }
 
 class _BelajarFormState extends State<BelajarForm> {
@@ -102,14 +103,16 @@ class _BelajarFormState extends State<BelajarForm> {
                         print("nilai slider $nilaiSlider");
                       });
                     }),
-                RaisedButton(
+                ElevatedButton(
                     child: Text(
                       "Submit",
                       style: TextStyle(color: Colors.white),
                     ),
-                    color: Colors.blue,
+                    
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+
+                      }
                     })
               ]),
             ),
